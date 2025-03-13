@@ -12,13 +12,12 @@ function ProductCardStock({ produto, updateProduct }) {
 
   useEffect(() => {
     setQuantity(produto.quantity);
-  }, [produto.quantity]); // Atualiza quando a prop muda
-  
+  }, [produto.quantity]); 
   const updateQuantity = () => {
     if (inputValue && !isNaN(inputValue) && Number(inputValue) >= 0) {
       updateProduct(produto._id, { quantity: Number(inputValue) })
         .then(() => {
-          setQuantity(Number(inputValue)); // Atualiza localmente a exibição
+          setQuantity(Number(inputValue));
           setInputValue('');
           setIsInputVisible(false);
         })

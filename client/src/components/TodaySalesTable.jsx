@@ -15,7 +15,6 @@ const TodaySalesTable = () => {
     setLoading(true);
     try {
       const { data } = await axios.get('https://sistemapdv-2.onrender.com/sales');
-      // Filtra as vendas para exibir apenas as realizadas no dia de hoje
       const todaySales = data.filter((sale) => moment(sale.date).isSame(moment(), 'day'));
       setSales(todaySales);
     } catch (error) {

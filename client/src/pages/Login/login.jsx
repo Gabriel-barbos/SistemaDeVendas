@@ -14,7 +14,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Exemplo de credenciais locais
+    // credenciais locais
     if (username === 'admin' && password === 'Ismael1234@') {
       localStorage.setItem('user', JSON.stringify({ role: 'admin', username }));
       navigate('/admin/relatorios'); // redireciona para a rota do administrador

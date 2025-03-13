@@ -5,9 +5,9 @@ import "../assets/productCard.css";
 import useProducts from '../pages/Produtos/useProducts';
 
 function ProductCard({ product }) {
-  const { updateProduct, deleteProduct } = useProducts(); // Hook para atualizar e deletar produtos
+  const { updateProduct, deleteProduct } = useProducts(); 
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm(); // Formulário do Ant Design
+  const [form] = Form.useForm(); 
 
   // Abrir Drawer e preencher os campos
   const showDrawer = () => {
@@ -22,10 +22,8 @@ function ProductCard({ product }) {
     });
   };
 
-  // Fechar Drawer
   const onClose = () => setOpen(false);
 
-  // Atualizar Produto
   const handleUpdate = async (values) => {
     try {
       // Se houver imagens novas, pegar apenas as URLs
@@ -51,17 +49,14 @@ function ProductCard({ product }) {
 
   return (
     <div className='card-container'>
-      {/* Imagem do produto */}
       <img className="card-img" src={product.image?.[0] || "https://via.placeholder.com/150"} alt={product.name} />
 
-      {/* Informações do produto */}
       <div className="card-content">
         <span className='card-title'>{product.name || "Produto sem nome"}</span>
         <span className='card-code'>cod. {product.code || "N/A"}</span>
         <span className='card-price'> R$ {product.price ? product.price.toFixed(2) : "0,00"}</span>
       </div>
 
-      {/* Botão para abrir o Drawer */}
       <Button
         type="primary"
         icon={<EyeOutlined />}
@@ -71,7 +66,6 @@ function ProductCard({ product }) {
         Ver detalhes
       </Button>
 
-      {/* Drawer de Edição */}
       <Drawer title="Editar Produto" onClose={onClose} open={open} width={400}>
         <Form form={form} layout="vertical" onFinish={handleUpdate}>
           <Form.Item name="name" label="Nome do Produto" rules={[{ required: true, message: 'Insira o nome do produto' }]}>
@@ -104,7 +98,6 @@ function ProductCard({ product }) {
           </Button>
         </Form>
 
-        {/* Botão de exclusão com Popconfirm */}
         <Popconfirm title="Tem certeza que deseja excluir?" onConfirm={handleDelete} okText="Sim" cancelText="Não">
           <Button type="default" danger icon={<DeleteOutlined />} block style={{ marginTop: 10 }}>
             Excluir Produto

@@ -9,19 +9,19 @@ import EmptyProduct from '../../assets/EmptyProduct.png'
 
 function ProductPage() {
   const [open, setOpen] = useState(false);
-  const { products, loading, error, createProduct } = useProducts(); // Hook para gerenciar os produtos
-  const [btnLoading, setBtnLoading] = useState(false); // Estado para controlar o loading do botão de criar
+  const { products, loading, error, createProduct } = useProducts(); 
+  const [btnLoading, setBtnLoading] = useState(false); 
 
   const showDrawer = () => setOpen(true);
   const onClose = () => setOpen(false);
 
   const handleCreateProduct = async (productData) => {
-    setBtnLoading(true); // Ativa o carregamento do botão
+    setBtnLoading(true); 
     try {
-      await createProduct(productData); // Chama a função do hook para criar o produto
-      onClose(); // Fecha o Drawer após o produto ser criado
+      await createProduct(productData); 
+      onClose(); 
     } catch (err) {
-      // Se ocorrer um erro, a variável btnLoading ficará falsa e o erro pode ser tratado
+
       setBtnLoading(false);
     }
   };
@@ -48,7 +48,6 @@ function ProductPage() {
         <ProductForm onSubmit={handleCreateProduct} btnLoading={btnLoading} />
       </Drawer>
 
-      {/* Exibir carregamento ou erro */}
       {loading && <Spin size="large" />}
       {error && <Alert message="Erro ao carregar produtos" type="error" showIcon />}
 

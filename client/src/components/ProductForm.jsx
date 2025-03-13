@@ -25,7 +25,7 @@ const ProductForm = () => {
     formData.append('quantity', values.quantity);
     formData.append('code', values.code);
     formData.append('BarCode', values.BarCode);
-    formData.append('image', fileList[0].originFileObj); // Apenas um arquivo permitido
+    formData.append('image', fileList[0].originFileObj); 
 
     try {
       await createProduct(formData);

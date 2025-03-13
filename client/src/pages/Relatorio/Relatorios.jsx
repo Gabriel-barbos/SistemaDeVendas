@@ -40,7 +40,6 @@ function Relatorios() {
     yearlySales: 0,
   });
 
-  // Busca os produtos para calcular o estoque
   useEffect(() => {
     fetch('https://sistemapdv-2.onrender.com/products')
       .then(response => response.json())

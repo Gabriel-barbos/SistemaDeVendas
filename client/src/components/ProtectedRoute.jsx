@@ -1,4 +1,3 @@
-// src/components/ProtectedRoute.jsx
 import { Navigate } from 'react-router-dom';
 
 function ProtectedRoute({ children, allowedRoles }) {
@@ -9,7 +8,6 @@ function ProtectedRoute({ children, allowedRoles }) {
     return <Navigate to="/" replace />;
   }
 
-  // Se o papel do usuário não estiver entre os permitidos, redireciona para a página de acesso negado
   if (!allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
