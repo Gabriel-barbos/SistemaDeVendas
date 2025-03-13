@@ -1,0 +1,160 @@
+.page-container {
+    display: flex;
+    width: 100%;
+    
+}
+
+.page-title {
+    display: flex;
+    align-items: center; /* Alinha verticalmente os elementos */
+    justify-content: left; /* Alinha horizontalmente os elementos */
+    margin-bottom: 10px;
+  }
+
+.searchbar{
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between; /* Coloca os itens em extremidades opostas */
+  margin-top: 25px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #000000;
+}
+
+.details span{
+    font-size: 23px;
+
+}
+  
+.total-value {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.payment-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.payment-buttons .ant-btn {
+  width: 32%;
+  height: 40px;
+  font-size: 20px;
+}
+
+.selected {
+  background-color: #1890ff !important;
+  border-color: #1890ff !important;
+}
+
+.concluir-compra {
+  width: 100%;
+  padding: 20px;
+  font-size: 20px;
+  background-color: #10970b !important;
+
+}
+
+  .page-title h2 {
+    margin: 0; /* Remove margens do h1 para evitar espaço extra */
+    font-family: "Open Sans", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 25px; /* Define o tamanho da fonte para o h1 (ajuste conforme necessário) */
+  }
+  
+  .page-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .page-title h2 {
+    margin-left: 10px;
+  }
+
+  .order-list{
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+
+.left-page {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 40px;
+}
+
+.right-page {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Garante que os containers fiquem no topo */
+  gap: 30px; /* Define o gap entre os containers */
+}
+
+.product-container {
+  width: 100%;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  background-color: #ffffff; /* Apenas para visualização */
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Garante que o conteúdo não fique centralizado */
+}
+
+.product-container img {
+  align-self: center; /* Apenas a imagem ficará centralizada */
+  width: 260px; /* Ajusta a imagem para não ultrapassar a largura do container */
+margin-bottom: 10px;
+border-radius: 10px;
+}
+
+.total-container {
+  width: 100%;
+  height: 320px; /* A altura do total-container permanece fixa */
+  background-color: #ffffff; /* Apenas para visualização */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-radius: 5px;
+}
+
+.product-details {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 9px; /* Espaço entre os detalhes */
+}
+
+.detail-item {
+  display: flex;
+  align-items: center; /* Alinha o ícone e o texto verticalmente */
+  justify-content: center;
+}
+
+.detail-text {
+  font-size: 18px; /* Aumenta o tamanho do texto */
+
+}
+
+.empty-text{
+  font-size: 20px;
+  font-weight: 600;
+  
+}

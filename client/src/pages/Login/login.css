@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+html, body {
+    margin: 0;
+    height: 100%; /* Garante que o body ocupe 100% da altura */
+  }
+.login-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    margin: 0;
+    height: 100vh;
+    }
+
+.login-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    align-items: center;
+    width: 50%;
+    height:100%;
+}
+
+.login-left h1{
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 28px;
+    margin-right: auto;
+    margin-left: 40px;
+}
+
+.login-left img{
+    width: 450px;
+    
+    height: auto;
+}
+
+.login-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 91%;
+    background: linear-gradient(45deg, #0a59c7, #144872, #1c4283, #4d9df8);
+    animation: gradientAnimation 15s ease infinite;
+    padding: 40px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+@keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+
+.login-form{
+
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    padding-bottom: 40px;
+    border-radius: 8px;
+    height: auto;
+    width: 400px;
+}
+
+.login-form h1{
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 28px;
+}
+
+.login-form input{  
+    width: 100%;
+    padding: 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+}
+
+.input{
+    margin-bottom: 20px;
+}
+
+.login-form button{
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 16px;
+    width: 100%;
+    height: 40px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-form button:hover{
+    background-color: #0f2291;
+    border: 2px solid #f8f8f8;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/* Responsividade */
+@media (max-width: 768px) {
+
+.login-container{
+    flex-wrap: wrap;
+}
+    .login-left, .login-right {
+        width: 100%;
+        height: auto;
+    }
+
+    .login-left img {
+        width: 80%;
+        height: auto;
+    }
+
+    .login-left h1 {
+        margin-left: 20px;
+        margin-right: 20px;
+        text-align: center;
+    }
+
+    .login-right {
+        padding: 20px;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-form {
+        padding: 15px;
+        width: 100%;
+    }
+
+    .login-form h1 {
+        font-size: 1.5rem;
+    }
+
+    .login-form button {
+        font-size: 0.875rem;
+        height: 35px;
+    }
+}
+
+@media (min-width: 1400px){
+    .login-form{
+        width: 600px;
+        height: 400px;
+    }
+}
+  

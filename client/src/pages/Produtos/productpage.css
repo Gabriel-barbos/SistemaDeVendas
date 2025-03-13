@@ -1,0 +1,33 @@
+.Page-title {
+    display: flex;
+    align-items: center; /* Alinha verticalmente os elementos */
+  }
+  
+  .Page-title h1 {
+    margin: 0; /* Remove margens do h1 para evitar espaço extra */
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 25px; /* Define o tamanho da fonte para o h1 (ajuste conforme necessário) */
+  }
+  
+  .Page-title svg {
+    margin-left: 8px; /* Espaço entre o texto e o ícone */
+  }
+  
+  .page-top{
+      display: flex;
+      direction: row;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      margin-bottom:50px ;
+  }
+
+  .product-list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 13px;
+    margin-top: 25px;
+  }
