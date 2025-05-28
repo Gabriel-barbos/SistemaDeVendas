@@ -29,6 +29,7 @@ router.post('/', upload.array('image', 5), async (req, res) => {
       quantity: req.body.quantity,
       code: req.body.code,
       BarCode: req.body.BarCode,
+      category: req.body.category,
     });
 
     const savedProduct = await product.save();
@@ -69,6 +70,7 @@ router.put('/:id', upload.array('image', 5), async (req, res) => {
       quantity: req.body.quantity,
       code: req.body.code,
       BarCode: req.body.BarCode,
+      category: req.body.category,
     };
 
     if (req.files && req.files.length > 0) {

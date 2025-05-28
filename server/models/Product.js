@@ -8,6 +8,11 @@ const ProductSchema = new mongoose.Schema({
     quantity: { type: Number, required: true },
     code: { type: String, required: true },
     BarCode: { type: String, required: true },
+    category: {
+        type: String,
+        required: true,
+        enum: ['eletronicos', 'acessorios', 'outros', 'cosmeticos', 'utilidades']
+    }
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

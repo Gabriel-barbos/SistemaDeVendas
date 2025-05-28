@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, InputNumber, Upload, Row, Col, message } from 'antd';
-import { EditOutlined, DollarOutlined, FieldNumberOutlined,PlusOutlined, TagsOutlined, BarcodeOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+  Form,
+  Input,
+  Button,
+  InputNumber,
+  Upload,
+  Row,
+  Col,
+  message,
+  Select
+} from 'antd';
+import {
+  EditOutlined,
+  DollarOutlined,
+  FieldNumberOutlined,
+  PlusOutlined,
+  TagsOutlined,
+  BarcodeOutlined,
+  UploadOutlined
+} from '@ant-design/icons';
 import useProducts from '../pages/Produtos/useProducts';
 
 const ProductForm = () => {
@@ -25,6 +43,7 @@ const ProductForm = () => {
     formData.append('quantity', values.quantity);
     formData.append('code', values.code);
     formData.append('BarCode', values.BarCode);
+    formData.append('category', values.category); 
     formData.append('image', fileList[0].originFileObj); 
 
     try {
@@ -38,7 +57,12 @@ const ProductForm = () => {
   };
 
   return (
-    <Form layout="vertical" form={form} onFinish={handleSubmit} style={{ maxWidth: 600, margin: '0 auto' }}>
+    <Form
+      layout="vertical"
+      form={form}
+      onFinish={handleSubmit}
+      style={{ maxWidth: 600, margin: '0 auto' }}
+    >
       <Row gutter={16}>
         <Col span={24}>
           <Form.Item
@@ -56,7 +80,7 @@ const ProductForm = () => {
               fileList={fileList}
               onChange={({ fileList }) => setFileList(fileList)}
             >
-              <Button icon={<UploadOutlined />}>Selecionar Imagem  PNG ou JPEG</Button>
+              <Button icon={<UploadOutlined />}>Selecionar Imagem PNG ou JPEG</Button>
             </Upload>
           </Form.Item>
         </Col>
@@ -76,7 +100,6 @@ const ProductForm = () => {
             label="Quantidade"
             name="quantity"
             rules={[{ required: true, message: 'Por favor, insira a quantidade do produto!' }]}
-            prefix={<FieldNumberOutlined />}
           >
             <InputNumber style={{ width: '100%' }} placeholder="Quantidade" />
           </Form.Item>
@@ -88,7 +111,11 @@ const ProductForm = () => {
             name="price"
             rules={[{ required: true, message: 'Por favor, insira o preço do produto!' }]}
           >
-            <InputNumber style={{ width: '100%' }} placeholder="Ex: 6.50" />
+            <InputNumber
+              style={{ width: '100%' }}
+              placeholder="Ex: 6.50"
+              prefix={<DollarOutlined />}
+            />
           </Form.Item>
         </Col>
 
@@ -98,7 +125,7 @@ const ProductForm = () => {
             name="cost"
             rules={[{ required: true, message: 'Por favor, insira o custo do produto!' }]}
           >
-            <InputNumber style={{ width: '100%' }} placeholder="Custo" />
+            <InputNumber style={{ width: '100%' }} placeholder="Custo" prefix={<DollarOutlined />} />
           </Form.Item>
         </Col>
 
@@ -123,9 +150,30 @@ const ProductForm = () => {
         </Col>
 
         <Col span={24}>
+          <Form.Item
+            label="Categoria"
+            name="category"
+            rules={[{ required: true, message: 'Por favor, selecione a categoria do produto!' }]}
+          >
+            <Select placeholder="Selecione a categoria">
+              <Select.Option value="eletronicos">Eletrônicos</Select.Option>
+              <Select.Option value="acessorios">Acessórios</Select.Option>
+              <Select.Option value="cosmeticos">Cosméticos</Select.Option>
+              <Select.Option value="utilidades">Utilidades</Select.Option>
+              <Select.Option value="outros">Outros</Select.Option>
+            </Select>
+          </Form.Item>
+        </Col>
+
+        <Col span={24}>
           <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={loading}
-            icon={<PlusOutlined />}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: '100%' }}
+              loading={loading}
+              icon={<PlusOutlined />}
+            >
               Criar Produto
             </Button>
           </Form.Item>
