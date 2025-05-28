@@ -14,7 +14,7 @@ const TodaySalesTable = () => {
   const fetchSales = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('https://sistemapdv-2.onrender.com/sales');
+      const { data } = await axios.get('https://sistema-de-vendas-lemon.vercel.app/sales');
       const todaySales = data.filter((sale) => moment(sale.date).isSame(moment(), 'day'));
       setSales(todaySales);
     } catch (error) {

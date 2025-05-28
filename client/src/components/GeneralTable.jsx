@@ -14,7 +14,7 @@ const GeneralTable = () => {
   const fetchSales = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('https://sistemapdv-2.onrender.com/sales');
+      const { data } = await axios.get('https://sistema-de-vendas-lemon.vercel.app/sales');
       setSales(data);
     } catch (error) {
       console.error('Erro ao buscar vendas:', error);

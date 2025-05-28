@@ -176,7 +176,7 @@ function Caixa() {
     const data = { items, payment };
 
     try {
-      const response = await fetch("https://sistemapdv-2.onrender.com/sales", {
+      const response = await fetch("https://sistema-de-vendas-lemon.vercel.app/sales", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

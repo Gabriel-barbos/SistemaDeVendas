@@ -14,7 +14,7 @@ const MonthlySalesTable = () => {
   const fetchSales = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('https://sistemapdv-2.onrender.com/sales');
+      const { data } = await axios.get('https://sistema-de-vendas-lemon.vercel.app/sales');
       // Filtra as vendas para exibir somente as realizadas no mês atual
       const monthlySales = data.filter((sale) => moment(sale.date).isSame(moment(), 'month'));
       setSales(monthlySales);

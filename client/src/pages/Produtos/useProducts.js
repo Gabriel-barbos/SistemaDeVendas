@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { message } from 'antd';
 
-const API_URL = 'https://sistemapdv-2.onrender.com/products';
+const API_URL = 'https://sistema-de-vendas-lemon.vercel.app/products';
 
 const useProducts = () => {
   const [products, setProducts] = useState([]);
