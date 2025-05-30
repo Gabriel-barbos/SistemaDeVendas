@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Drawer, Form, Input, InputNumber, message, Upload, Popconfirm } from 'antd';
-import { EyeOutlined, DeleteOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Drawer, Form, Input, InputNumber,Tag, message, Upload, Popconfirm } from 'antd';
+import { EyeOutlined, DeleteOutlined, SaveOutlined, UploadOutlined,FileSearchOutlined } from '@ant-design/icons';
 import "../assets/productCard.css";
 import useProducts from '../pages/Produtos/useProducts';
 
@@ -47,6 +47,16 @@ function ProductCard({ product }) {
     }
   };
 
+  const categoryColors = {
+    eletronicos: 'geekblue',
+    acessorios: 'purple',
+    outros: 'default',
+    cosmeticos: 'pink',
+    utilidades: 'green',
+  };
+
+  
+
   return (
     <div className='card-container'>
       <img className="card-img" src={product.image?.[0] || "https://via.placeholder.com/150"} alt={product.name} />
@@ -55,16 +65,32 @@ function ProductCard({ product }) {
         <span className='card-title'>{product.name || "Produto sem nome"}</span>
         <span className='card-code'>cod. {product.code || "N/A"}</span>
         <span className='card-price'> R$ {product.price ? product.price.toFixed(2) : "0,00"}</span>
+      
+        <div className="card-meta">
+  {product.category && (
+    <Tag
+      color={categoryColors[product.category] || 'blue'}
+      className="card-category-tag"
+    >
+      {product.category.toUpperCase()}
+    </Tag>
+  )}
+
+  {/* <span className="card-stock">
+    Estoque: {product.quantity ?? 0} unidade{product.quantity === 1 ? '' : 's'}
+  </span> */}
+</div>
+
+
       </div>
 
-      <Button
-        type="primary"
-        icon={<EyeOutlined />}
-        style={{ backgroundColor: '#', borderColor: '#f7f7f7', color: 'white' }}
-        onClick={showDrawer}
-      >
-        Ver detalhes
-      </Button>
+      <button
+    className="custom-button"
+    onClick={showDrawer}
+  >
+    <FileSearchOutlined style={{ marginRight: '8px' }} />
+    Ver detalhes
+  </button>
 
       <Drawer title="Editar Produto" onClose={onClose} open={open} width={400}>
         <Form form={form} layout="vertical" onFinish={handleUpdate}>
