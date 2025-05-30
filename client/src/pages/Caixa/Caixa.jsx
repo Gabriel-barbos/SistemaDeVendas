@@ -1,27 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import debounce from "lodash/debounce";
-import {
-  BarcodeOutlined,
-  TagOutlined,
-  ShoppingCartOutlined,
-  CheckCircleOutlined,
-  ShoppingOutlined,
-  CreditCardOutlined,
-  DollarOutlined,
-  FileTextOutlined,
-} from "@ant-design/icons";
-import { Input, Button, List, message, Modal, Result } from "antd";
-import product from "../../assets/product.avif";
-import emptyGIF from "../../assets/EmptyGIF.gif";
-import emptyCart from "../../assets/EmptyCart.gif";
-import "../Caixa/caixa.css";
-const { Search } = Input;
-import ProductItem from "../../components/ProductItem";
+import { message } from "antd";
 import useProducts from "../Produtos/useProducts";
-
+import ProductSearch from "./components/ProductSearch";
+import PurchaseList from "./components/PurchaseList";
+import OrderDetails from "./components/OrderDetails";
+import PaymentSection from "./components/PaymentSection";
+import SaleModals from "./components/SaleModals";
+import "../Caixa/caixa.css";
 
 function Caixa() {
-
   const { products, fetchProducts } = useProducts();
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +25,10 @@ function Caixa() {
   const [dinheiroModalVisible, setDinheiroModalVisible] = useState(false);
   const [dinheiroReceived, setDinheiroReceived] = useState("");
   const [dinheiroTroco, setDinheiroTroco] = useState(null);
+
+  // Estado para controlar busca automática vs manual
+  const [lastSearchTime, setLastSearchTime] = useState(0);
+  const [searchTimeout, setSearchTimeout] = useState(null);
 
   useEffect(() => {
     fetchProducts();
@@ -72,28 +64,60 @@ function Caixa() {
     });
   }, []);
 
-  const handleSearch = useCallback(
-    (value) => {
-      setSearchTerm(value);
-      setSelectedProduct(null);
-      if (!value.trim()) {
-        setFilteredProducts([]);
-        return;
-      }
-      const filtered = products.filter(
-        (product) =>
-          product.name?.toLowerCase().includes(value.toLowerCase()) ||
-          product.BarCode?.includes(value)
-      );
-      setFilteredProducts(filtered);
-    },
-    [products]
-  );
+  // Sistema de busca melhorado para códigos de barras
+  const performSearch = useCallback((value) => {
+    if (!value.trim()) {
+      setFilteredProducts([]);
+      return;
+    }
 
-  const debouncedHandleSearch = useMemo(
-    () => debounce(handleSearch, 300),
-    [handleSearch]
-  );
+    const filtered = products.filter(
+      (product) =>
+        product.name?.toLowerCase().includes(value.toLowerCase()) ||
+        product.BarCode?.includes(value) ||
+        product.code?.includes(value)
+    );
+    
+    setFilteredProducts(filtered);
+
+    // Se encontrou produto exato por código de barras, seleciona automaticamente
+    const exactMatch = products.find(
+      (product) => product.BarCode === value || product.code === value
+    );
+    
+    if (exactMatch) {
+      setSelectedProduct(exactMatch);
+      setSearchTerm(exactMatch.name);
+      setFilteredProducts([]);
+    }
+  }, [products]);
+
+  const handleSearch = useCallback((value) => {
+    const currentTime = Date.now();
+    setSearchTerm(value);
+    setSelectedProduct(null);
+    setLastSearchTime(currentTime);
+
+    // Limpa timeout anterior
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    // Para códigos de barras (números longos), busca imediatamente
+    const isBarcode = /^\d{8,}$/.test(value);
+    
+    if (isBarcode) {
+      performSearch(value);
+    } else {
+      // Para busca por nome, usa debounce
+      const newTimeout = setTimeout(() => {
+        if (Date.now() - currentTime >= 300) {
+          performSearch(value);
+        }
+      }, 300);
+      setSearchTimeout(newTimeout);
+    }
+  }, [performSearch, searchTimeout]);
 
   const handleSelectProduct = useCallback((product) => {
     setSearchTerm(product.name);
@@ -132,15 +156,6 @@ function Caixa() {
   const lastProduct = useMemo(() => {
     return purchaseList.length > 0 ? purchaseList[purchaseList.length - 1].product : null;
   }, [purchaseList]);
-
-  // Calcula o troco enquanto o usuário digita
-  const computedTroco = useMemo(() => {
-    const received = parseFloat(dinheiroReceived);
-    if (!isNaN(received) && received >= totalValue) {
-      return received - totalValue;
-    }
-    return null;
-  }, [dinheiroReceived, totalValue]);
 
   const handleConcluirCompra = useCallback(async () => {
     if (purchaseList.length === 0) {
@@ -191,7 +206,6 @@ function Caixa() {
 
       await response.json();
 
-      // Prepara os dados do comprovante para impressão
       const saleDataForReceipt = {
         items: purchaseList,
         total: totalValue,
@@ -222,300 +236,54 @@ function Caixa() {
     }
   }, [purchaseList, selectedPayment, fiadoName, dinheiroReceived, totalValue, dinheiroTroco]);
 
-  const handlePrint = () => {
-    const printContents = document.getElementById("receipt-content").innerHTML;
-    const printWindow = window.open("", "", "width=800,height=600");
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Comprovante de Venda</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; }
-            ul { list-style-type: none; padding: 0; }
-            li { margin-bottom: 5px; }
-          </style>
-        </head>
-        <body>
-          ${printContents}
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  };
-
   return (
     <div className="page-container">
       <div className="left-page">
-        <div className="searchbar">
-          <div className="page-title">
-            <BarcodeOutlined style={{ fontSize: 25, marginRight: 5 }} />
-            <h2> Adicionar produto</h2>
-          </div>
-          <Search
-            placeholder="Digite o código ou nome do produto"
-            allowClear
-            enterButton="Adicionar"
-            size="large"
-            value={searchTerm}
-            onChange={(e) => debouncedHandleSearch(e.target.value)}
-            onSearch={handleAddProduct}
-          />
-          {filteredProducts.length > 0 && (
-            <List
-              className="autocomplete-list"
-              dataSource={filteredProducts}
-              renderItem={(item) => (
-                <List.Item className="autocomplete-item" onClick={() => handleSelectProduct(item)}>
-                  {item.name} - R$ {item.price}
-                </List.Item>
-              )}
-            />
-          )}
-        </div>
+        <ProductSearch
+          searchTerm={searchTerm}
+          filteredProducts={filteredProducts}
+          onSearch={handleSearch}
+          onSelectProduct={handleSelectProduct}
+          onAddProduct={handleAddProduct}
+        />
 
-        <div className="order-list">
-          <div className="page-title">
-            <TagOutlined style={{ fontSize: 25, marginRight: 5 }} />
-            <h2> Lista de compra</h2>
-          </div>
-          <div className="list">
-            {purchaseList.length === 0 ? (
-              <div className="empty-purchase-list" style={{ textAlign: "center", padding: "20px" }}>
-                <img
-                  src={emptyCart}
-                  alt="Nenhum item"
-                  style={{ width: "100%", maxWidth: "250px", marginBottom: "5px" }}
-                />
-                <p style={{ fontSize: 20, fontWeight: 600 }}>Nenhum item na lista de compras</p>
-              </div>
-            ) : (
-              purchaseList.map((item, index) => (
-                <ProductItem
-                  key={index}
-                  product={item.product}
-                  quantity={item.quantity}
-                  onQuantityChange={(newQuantity) => handleQuantityChange(index, newQuantity)}
-                  onRemove={() => handleRemoveProduct(index)}
-                />
-              ))
-            )}
-          </div>
-        </div>
+        <PurchaseList
+          purchaseList={purchaseList}
+          onQuantityChange={handleQuantityChange}
+          onRemoveProduct={handleRemoveProduct}
+        />
       </div>
 
       <div className="right-page">
-        <div className="product-container">
-          <div className="page-title">
-            <ShoppingOutlined style={{ fontSize: 25, marginRight: 5 }} />
-            <h2>Detalhes do pedido</h2>
-          </div>
-          {lastProduct ? (
-            <>
-              <img
-                className="product-img"
-                src={lastProduct.image && lastProduct.image.length > 0 ? lastProduct.image[0] : product}
-                alt="Produto"
-              />
-              <div className="product-details">
-                <div className="detail-item">
-                  <TagOutlined style={{ fontSize: 20, marginRight: 10 }} />
-                  <span className="detail-text">
-                    <strong>Nome do Produto:</strong> {lastProduct.name}
-                  </span>
-                </div>
-                <div className="detail-item">
-                  <DollarOutlined style={{ fontSize: 20, marginRight: 10 }} />
-                  <span className="detail-text">
-                    <strong>Preço:</strong> R$ {lastProduct.price}
-                  </span>
-                </div>
-                <div className="detail-item">
-                  <BarcodeOutlined style={{ fontSize: 20, marginRight: 10 }} />
-                  <span className="detail-text">
-                    <strong>Cod.produto:</strong> {lastProduct.code || lastProduct.BarCode}
-                  </span>
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <img className="product-img" src={emptyGIF} alt="Produto" />
-              <div className="product-details">
-                <div className="detail-item">
-                  <span className="empty-text">Nenhum produto adicionado</span>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
+        <OrderDetails lastProduct={lastProduct} />
 
-        <div className="total-container">
-          <div className="page-title">
-            <ShoppingCartOutlined style={{ fontSize: 25, marginRight: 5 }} />
-            <h2>Resumo da compra</h2>
-          </div>
-          <div className="details">
-            <span>Total: </span>
-            <span className="total-value">
-              {totalValue.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </span>
-          </div>
-
-          <div className="page-title">
-            <ShoppingCartOutlined style={{ fontSize: 25, marginRight: 5 }} />
-            <h2>Forma de pagamento:</h2>
-          </div>
-
-          <div className="payment-buttons">
-            <Button
-              icon={<CreditCardOutlined />}
-              onClick={() => handlePaymentSelect("cartao")}
-              disabled={selectedPayment && selectedPayment !== "cartao"}
-              className={selectedPayment === "cartao" ? "selected" : ""}
-            >
-              Cartão
-            </Button>
-            <Button
-              icon={<DollarOutlined />}
-              onClick={() => handlePaymentSelect("dinheiro")}
-              disabled={selectedPayment && selectedPayment !== "dinheiro"}
-              className={selectedPayment === "dinheiro" ? "selected" : ""}
-            >
-              Dinheiro
-            </Button>
-            <Button
-              icon={<FileTextOutlined />}
-              onClick={() => handlePaymentSelect("fiado")}
-              disabled={selectedPayment && selectedPayment !== "fiado"}
-              className={selectedPayment === "fiado" ? "selected" : ""}
-            >
-              Fiado
-            </Button>
-          </div>
-
-          {selectedPayment === "fiado" && (
-            <Input
-              placeholder="Nome do cliente"
-              value={fiadoName}
-              onChange={(e) => setFiadoName(e.target.value)}
-              style={{ marginTop: "10px" }}
-            />
-          )}
-
-          <Button
-            type="primary"
-            className="concluir-compra"
-            onClick={handleConcluirCompra}
-            loading={isSubmitting}
-            disabled={isSubmitting}
-          >
-            <CheckCircleOutlined />
-            Concluir Compra
-          </Button>
-        </div>
+        <PaymentSection
+          totalValue={totalValue}
+          selectedPayment={selectedPayment}
+          fiadoName={fiadoName}
+          onPaymentSelect={handlePaymentSelect}
+          onFiadoNameChange={setFiadoName}
+          onConcluirCompra={handleConcluirCompra}
+          isSubmitting={isSubmitting}
+        />
       </div>
 
-      <Modal
-        visible={saleConfirmed}
-        footer={null}
-        onCancel={() => setSaleConfirmed(false)}
-      >
-        <Result
-          status="success"
-          title="Venda confirmada!"
-          subTitle="A sua compra foi registrada com sucesso."
-          extra={[
-            <Button type="primary" key="print" onClick={handlePrint}>
-              Imprimir Comprovante
-            </Button>,
-            <Button type="default" key="ok" onClick={() => setSaleConfirmed(false)}>
-              OK
-            </Button>,
-          ]}
-        />
-      </Modal>
-
-      <Modal
-        visible={dinheiroModalVisible}
-        title="Calcular Troco"
-        onCancel={() => {
+      <SaleModals
+        saleConfirmed={saleConfirmed}
+        dinheiroModalVisible={dinheiroModalVisible}
+        dinheiroReceived={dinheiroReceived}
+        totalValue={totalValue}
+        dinheiroTroco={dinheiroTroco}
+        receiptData={receiptData}
+        onSaleConfirmedClose={() => setSaleConfirmed(false)}
+        onDinheiroModalClose={() => {
           setDinheiroModalVisible(false);
           setSelectedPayment(null);
         }}
-        footer={[
-          <Button
-            key="cancel"
-            onClick={() => {
-              setDinheiroModalVisible(false);
-              setSelectedPayment(null);
-            }}
-          >
-            Cancelar
-          </Button>,
-          <Button
-            key="confirm"
-            type="primary"
-            onClick={() => {
-              const received = parseFloat(dinheiroReceived);
-              if (isNaN(received) || received < totalValue) {
-                message.error("Valor recebido deve ser maior ou igual ao total");
-                return;
-              }
-              setDinheiroTroco(received - totalValue);
-              setDinheiroModalVisible(false);
-              message.success(`Troco calculado: R$ ${(received - totalValue).toFixed(2)}`);
-            }}
-          >
-            Confirmar
-          </Button>,
-        ]}
-      >
-        <Input
-          type="number"
-          placeholder="Valor recebido"
-          value={dinheiroReceived}
-          onChange={(e) => setDinheiroReceived(e.target.value)}
-        />
-        <p>Total: R$ {totalValue.toFixed(2)}</p>
-        {computedTroco !== null && <p>Troco: R$ {computedTroco.toFixed(2)}</p>}
-      </Modal>
-
-      {/* Div oculta com o conteúdo do comprovante para impressão */}
-      <div id="receipt-content" style={{ display: "none" }}>
-        <h1>Comprovante de Venda</h1>
-        {receiptData && (
-          <>
-            <p>
-              <strong>Total:</strong>{" "}
-              {receiptData.total.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </p>
-            <ul>
-              {receiptData.items.map((item, index) => (
-                <li key={index}>
-                  {item.product.name} - Quantidade: {item.quantity} - Valor:{" "}
-                  {Number(item.product.price).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </li>
-              ))}
-            </ul>
-            <p>
-              <strong>Forma de Pagamento:</strong> {receiptData.payment}
-            </p>
-          </>
-        )}
-      </div>
+        onDinheiroReceivedChange={setDinheiroReceived}
+        onDinheiroTrocoSet={setDinheiroTroco}
+        onDinheiroModalConfirm={() => setDinheiroModalVisible(false)}
+      />
     </div>
   );
 }
