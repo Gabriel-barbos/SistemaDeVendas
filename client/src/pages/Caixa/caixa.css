@@ -127,7 +127,7 @@ border-radius: 10px;
 
 .total-container {
   width: 100%;
-  height: 320px; /* A altura do total-container permanece fixa */
+  height: auto; /* A altura do total-container permanece fixa */
   background-color: #ffffff; /* Apenas para visualização */
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
@@ -157,4 +157,65 @@ border-radius: 10px;
   font-size: 20px;
   font-weight: 600;
   
+}
+
+.caixa-button-container {
+  display: flex;
+  padding: 20px 0;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.caixa-button {
+  width:100%;;
+  height: 40px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.caixa-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-caixa .ant-modal-header {
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-caixa .ant-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modal-content {
+  padding: 20px 0;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+/* Estilo para o botão quando o caixa está aberto */
+.ant-btn-danger.caixa-button {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.ant-btn-danger.caixa-button:hover {
+  background-color: #ff7875;
+  border-color: #ff7875;
+}
+
+/* Estilo para o botão quando o caixa está fechado */
+.ant-btn-primary.caixa-button {
+  background-color: #0088c7;
+  border-color: #013f72;
+}
+
+.ant-btn-primary.caixa-button:hover {
+  background-color: #73d13d;
+  border-color: #73d13d;
 }
