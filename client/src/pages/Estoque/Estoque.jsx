@@ -1,19 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 import { BarcodeOutlined, ShopOutlined, DollarCircleOutlined, AppstoreOutlined, LineChartOutlined } from '@ant-design/icons';
-import ProductCardStock from '../../components/ProductCardStock';
 import './Estoque.css';
 import useProducts from '../Produtos/useProducts';
-import EmptyData from '../../assets/EmptyData.gif';
+import ProductStockTable from '../../components/ProductStockTable';
 
 function Estoque() {
   const { products, loading, error, updateProduct } = useProducts();
 
+  const [stats, setStats] = useState({
+    estoque: 0,
+    estoqueVenda: 0,
+    margemLucro: 0,
+    quantidadeTotal: 0,
+  });
+
+  useEffect(() => {
+    fetch('https://sistema-de-vendas-lemon.vercel.app/products')
+      .then(response => response.json())
+      .then(data => {
+        // Soma do custo dos produtos vezes a quantidade
+        const totalEstoque = data.reduce((acc, produto) =>
+          acc + (produto.cost * produto.quantity), 0);
+        // Soma do preço dos produtos vezes a quantidade
+        const totalEstoqueVenda = data.reduce((acc, produto) =>
+          acc + (produto.price * produto.quantity), 0);
+        // Margem de lucro (em porcentagem)
+        const margemLucro = totalEstoqueVenda > 0
+          ? (totalEstoque / totalEstoqueVenda) * 100
+          : 0;
+
+        const quantidadeTotal = data.reduce((acc, produto) => acc + produto.quantity, 0);
+
+        setStats({
+          estoque: totalEstoque,
+          estoqueVenda: totalEstoqueVenda,
+          margemLucro,
+          quantidadeTotal
+        });
+      })
+      .catch(error => console.error("Erro ao buscar produtos:", error));
+  }, []);
+
+
   return (
     <div>
       <h1>Estoque</h1>
-      
+
       <div className="cards-group">
         <div className="stock-card items">
           <div className="card-icon">
@@ -21,7 +55,7 @@ function Estoque() {
           </div>
           <div className="card-content">
             <h3 className="card-title">Total de Itens</h3>
-            <p className="card-value">109</p>
+            <p className="card-value">{stats.quantidadeTotal} </p>
             <span className="card-subtitle">produtos cadastrados</span>
           </div>
         </div>
@@ -32,7 +66,9 @@ function Estoque() {
           </div>
           <div className="card-content">
             <h3 className="card-title">Valor do estoque</h3>
-            <p className="card-value">R$ 347.071,35</p>
+            <p className="card-value">
+              {stats.estoque.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </p>
             <span className="card-subtitle">Valor total em estoque</span>
           </div>
         </div>
@@ -43,23 +79,27 @@ function Estoque() {
           </div>
           <div className="card-content">
             <h3 className="card-title"> Valor do estoque (venda)</h3>
-            <p className="card-value">R$ 387.071,35</p>
+            <p className="card-value">
+              {stats.estoqueVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </p>
             <span className="card-subtitle">valor de venda do estoque</span>
           </div>
         </div>
 
         <div className="stock-card ">
           <div className="card-icon">
-          <LineChartOutlined />
-          
-                    </div>
+            <LineChartOutlined />
+
+          </div>
           <div className="card-content">
             <h3 className="card-title">Margem de lucro</h3>
-            <p className="card-value">15%</p>
+            <p className="card-value">{stats.margemLucro.toFixed(2)}%</p>
             <span className="card-subtitle">margem de lucro estoque x valor de venda</span>
           </div>
         </div>
       </div>
+
+      <ProductStockTable />
     </div>
   );
 }
