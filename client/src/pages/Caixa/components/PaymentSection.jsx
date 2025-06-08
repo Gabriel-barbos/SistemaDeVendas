@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ShoppingCartOutlined,
   CheckCircleOutlined,
@@ -10,6 +10,10 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import { Input, Button, Modal, InputNumber, Tooltip, message } from "antd";
+import axios from "axios";
+
+
+const API_BASE_URL = "https://sistema-de-vendas-lemon.vercel.app"
 
 function PaymentSection({
   totalValue,
@@ -24,21 +28,106 @@ function PaymentSection({
   const [modalAbrir, setModalAbrir] = useState(false);
   const [modalFechar, setModalFechar] = useState(false);
   const [valorAbertura, setValorAbertura] = useState(0);
+  const [valorFechamento, setValorFechamento] = useState(0);
+  const [dadosCaixa, setDadosCaixa] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleAbrirCaixa = () => setModalAbrir(true);
-  const handleFecharCaixa = () => setModalFechar(true);
+  // Verificar se há caixa aberto ao carregar o componente
+  useEffect(() => {
+    verificarCaixaAberto();
+  }, []);
 
-  const confirmarAbertura = () => {
-    setCaixaAberto(true);
-    setModalAbrir(false);
-    message.success("Caixa aberto com sucesso!");
+  const verificarCaixaAberto = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/caixa/aberto`);
+      if (response.data) {
+        setCaixaAberto(true);
+        setDadosCaixa(response.data);
+        setValorAbertura(response.data.valorAbertura);
+      }
+    } catch (error) {
+      // Se não encontrar caixa aberto, mantém fechado
+      setCaixaAberto(false);
+      setDadosCaixa(null);
+    }
   };
 
-  const confirmarFechamento = () => {
-    setCaixaAberto(false);
-    setModalFechar(false);
+  const handleAbrirCaixa = () => {
     setValorAbertura(0);
-    message.info("Caixa fechado.");
+    setModalAbrir(true);
+  };
+
+  const handleFecharCaixa = () => {
+    setValorFechamento(0);
+    setModalFechar(true);
+  };
+
+  const confirmarAbertura = async () => {
+    if (valorAbertura < 0) {
+      message.error("O valor de abertura não pode ser negativo.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/caixa/abrir`, {
+        valorAbertura: valorAbertura,
+      });
+
+      setCaixaAberto(true);
+      setDadosCaixa(response.data.caixa);
+      setModalAbrir(false);
+      message.success("Caixa aberto com sucesso!");
+    } catch (error) {
+      const errorMsg = error.response?.data?.msg || "Erro ao abrir o caixa.";
+      message.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const confirmarFechamento = async () => {
+    if (valorFechamento < 0) {
+      message.error("O valor de fechamento não pode ser negativo.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/caixa/fechar`, {
+        valorFechamento: valorFechamento,
+      });
+
+      const caixaFechado = response.data.caixa;
+      
+      // Mostrar resumo do fechamento
+      Modal.info({
+        title: "Caixa Fechado com Sucesso",
+        content: (
+          <div>
+            <p><strong>Valor de Abertura:</strong> {caixaFechado.valorAbertura.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
+            <p><strong>Total Vendas Dinheiro:</strong> {caixaFechado.totalVendasDinheiro.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
+            <p><strong>Valor Esperado:</strong> {(caixaFechado.valorAbertura + caixaFechado.totalVendasDinheiro).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
+            <p><strong>Valor Informado:</strong> {caixaFechado.valorFechamento.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
+            <p style={{ color: caixaFechado.diferenca >= 0 ? 'green' : 'red' }}>
+              <strong>Diferença:</strong> {caixaFechado.diferenca.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+            </p>
+          </div>
+        ),
+        okText: "Entendi"
+      });
+
+      setCaixaAberto(false);
+      setDadosCaixa(null);
+      setModalFechar(false);
+      setValorAbertura(0);
+      setValorFechamento(0);
+    } catch (error) {
+      const errorMsg = error.response?.data?.msg || "Erro ao fechar o caixa.";
+      message.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleConcluirCompra = () => {
@@ -130,10 +219,30 @@ function PaymentSection({
             onClick={caixaAberto ? handleFecharCaixa : handleAbrirCaixa}
             className="caixa-button"
             size="large"
+            loading={loading}
           >
             {caixaAberto ? "Fechar Caixa" : "Abrir Caixa"}
           </Button>
         </div>
+
+        {/* Mostrar informações do caixa aberto */}
+        {caixaAberto && dadosCaixa && (
+          <div style={{ 
+            marginTop: "10px", 
+            padding: "8px", 
+            backgroundColor: "#f0f9ff", 
+            border: "1px solid #91caff", 
+            borderRadius: "6px",
+            fontSize: "12px"
+          }}>
+            <div style={{ color: "#1890ff", fontWeight: "500" }}>
+              Caixa Aberto - {new Date(dadosCaixa.dataAbertura).toLocaleString("pt-BR")}
+            </div>
+            <div style={{ color: "#666" }}>
+              Valor inicial: {dadosCaixa.valorAbertura.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modal Abrir Caixa */}
@@ -145,6 +254,7 @@ function PaymentSection({
         okText="Confirmar"
         cancelText="Cancelar"
         className="modal-caixa"
+        confirmLoading={loading}
       >
         <div className="modal-content">
           <p>Informe o valor inicial do caixa:</p>
@@ -158,6 +268,7 @@ function PaymentSection({
             style={{ width: "100%" }}
             size="large"
             min={0}
+            placeholder="0,00"
           />
         </div>
       </Modal>
@@ -172,18 +283,40 @@ function PaymentSection({
         cancelText="Cancelar"
         okButtonProps={{ danger: true }}
         className="modal-caixa"
+        confirmLoading={loading}
       >
         <div className="modal-content">
-          <p style={{ fontSize: "16px", marginBottom: "10px" }}>
-            Você tem certeza que deseja fechar o caixa?
+          <p style={{ fontSize: "16px", marginBottom: "15px" }}>
+            Informe o valor atual no caixa para fechamento:
           </p>
-          <p style={{ fontSize: "14px", color: "#666" }}>
-            Valor de abertura:{" "}
-            {valorAbertura.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            })}
-          </p>
+          
+          <InputNumber
+            value={valorFechamento}
+            onChange={setValorFechamento}
+            formatter={(value) =>
+              `R$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+            }
+            parser={(value) => value.replace(/R\$\s?|(\.)/g, "")}
+            style={{ width: "100%", marginBottom: "15px" }}
+            size="large"
+            min={0}
+            placeholder="0,00"
+          />
+
+          {dadosCaixa && (
+            <div style={{ fontSize: "14px", color: "#666" }}>
+              <p style={{ margin: "5px 0" }}>
+                <strong>Valor de abertura:</strong>{" "}
+                {dadosCaixa.valorAbertura.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </p>
+              <p style={{ margin: "5px 0", fontSize: "12px", color: "#999" }}>
+                Aberto em: {new Date(dadosCaixa.dataAbertura).toLocaleString("pt-BR")}
+              </p>
+            </div>
+          )}
         </div>
       </Modal>
     </>
