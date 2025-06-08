@@ -26,8 +26,8 @@ const TopProductsChart = ({ data }) => {
             }}
           />
           <Legend />
-          <Bar yAxisId="left" dataKey="receita" fill="#8884d8" name="Receita Total" />
-          <Bar yAxisId="right" dataKey="quantidade" fill="#82ca9d" name="Quantidade" />
+          <Bar yAxisId="left" dataKey="receita" fill="#76259c" name="Receita Total" />
+          <Bar yAxisId="right" dataKey="quantidade" fill="#4753bb" name="Quantidade" />
         </BarChart>
       </ResponsiveContainer>
     </Card>

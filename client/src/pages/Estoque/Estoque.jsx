@@ -46,7 +46,10 @@ function Estoque() {
 
   return (
     <div>
-      <h1>Estoque</h1>
+       <div className="Page-title">
+          <AppstoreOutlined style={{ fontSize: 25, marginRight: 5 }} />
+          <h1>Estoque</h1>
+        </div>
 
       <div className="cards-group">
         <div className="stock-card items">

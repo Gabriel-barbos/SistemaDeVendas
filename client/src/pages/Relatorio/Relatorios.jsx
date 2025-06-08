@@ -193,12 +193,12 @@ function Relatorios() {
 
   return (
     <div style={{ padding: '20px', background: '#f5f5f5', minHeight: '100vh' }}>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-        <PieChartOutlined style={{ fontSize: 25, marginRight: 10, color: '#000' }} />
-        <h1 style={{ margin: 0, color: '#001529' }}>Dashboard de Relatórios</h1>
-      </div>
+ <div className="Page-title">
+          <PieChartOutlined style={{ fontSize: 25, marginRight: 5 }} />
+          <h1>Gerenciar Produtos</h1>
+        </div>
 
-      <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
+      <Row gutter={[16, 16]} style={{ marginBottom: '24px', marginTop: '20px' }}>
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic 

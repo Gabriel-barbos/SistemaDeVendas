@@ -12,7 +12,7 @@ const HourlySalesChart = ({ data }) => {
           <XAxis dataKey="hora" />
           <YAxis />
           <Tooltip formatter={(value) => [`R$ ${value.toFixed(2)}`, 'Vendas']} />
-          <Line type="monotone" dataKey="vendas" stroke="#82ca9d" strokeWidth={2} />
+          <Line type="monotone" dataKey="vendas" stroke="#32d36f" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     </Card>

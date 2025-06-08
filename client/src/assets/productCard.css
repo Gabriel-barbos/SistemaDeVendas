@@ -31,8 +31,14 @@
     font-family: sans-serif;
     font-weight: 400;
     margin-bottom: -2px;
+    color: #0365d6;
 }
 
+.product-name{
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
 .card-code {
     margin-bottom: 10px;
     font-size: 14px;

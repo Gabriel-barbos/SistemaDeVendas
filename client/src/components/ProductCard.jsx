@@ -62,7 +62,7 @@ function ProductCard({ product }) {
       <img className="card-img" src={product.image?.[0] || "https://via.placeholder.com/150"} alt={product.name} />
 
       <div className="card-content">
-        <span className='card-title'>{product.name || "Produto sem nome"}</span>
+        <span className='product-name'>{product.name || "Produto sem nome"}</span>
         <span className='card-code'>cod. {product.code || "N/A"}</span>
         <span className='card-price'> R$ {product.price ? product.price.toFixed(2) : "0,00"}</span>
       

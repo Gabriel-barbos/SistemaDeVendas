@@ -21,8 +21,8 @@ const SalesHistoryChart = ({ data }) => {
             }}
           />
           <Legend />
-          <Line yAxisId="left" type="monotone" dataKey="vendas" stroke="#8884d8" strokeWidth={2} name="Valor Vendido" />
-          <Line yAxisId="right" type="monotone" dataKey="quantidade" stroke="#82ca9d" strokeWidth={2} name="Qtd Vendas" />
+          <Line yAxisId="left" type="monotone" dataKey="vendas" stroke="#2344a1" strokeWidth={2} name="Valor Vendido" />
+          <Line yAxisId="right" type="monotone" dataKey="quantidade" stroke="#961915" strokeWidth={2} name="Quantidade Vendas" />
         </LineChart>
       </ResponsiveContainer>
     </Card>
