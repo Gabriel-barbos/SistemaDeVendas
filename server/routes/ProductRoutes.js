@@ -3,7 +3,7 @@ const router = express.Router();
 const Product = require('../models/Product');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config/cloudinary'); // já configurado
+const cloudinary = require('../config/cloudinary');
 
 // Configuração do multer com Cloudinary para produtos
 const storage = new CloudinaryStorage({

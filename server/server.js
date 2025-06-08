@@ -6,6 +6,7 @@ require('dotenv').config();
 // Importação das rotas
 const productRoutes = require('./routes/ProductRoutes');
 const saleRoutes = require('./routes/SalesRoutes');
+const CaixaRoutes = require('./routes/CaixaRoutes.')
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use('/products', productRoutes);
 app.use('/estoque', productRoutes);
 app.use('/sales', saleRoutes);
+app.use('/caixa', CaixaRoutes)
 
 // Conexão com MongoDB
 mongoose.connect(process.env.MONGO_URI, {
