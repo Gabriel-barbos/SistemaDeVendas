@@ -132,5 +132,18 @@ router.patch('/estoque/:id', async (req, res) => {
   }
 });
 
+app.get('/categories', async (req, res) => {
+  try {
+    const categories = await Product.distinct('category');
+    // Remove valores nulos/vazios e ordena
+    const validCategories = categories
+      .filter(cat => cat && cat.trim() !== '')
+      .sort();
+    
+    res.json(validCategories);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar categorias' });
+  }
+});
 
 module.exports = router;
