@@ -106,12 +106,12 @@ const ProductStockTable = () => {
   }, [products, searchText, selectedCategories, showLowStock]);
 
   // Produtos com estoque baixo para alerta
-  const lowStockProducts = useMemo(() => 
+  const lowStockProducts = useMemo(() =>
     products.filter(p => p.quantity <= LOW_STOCK_THRESHOLD && p.quantity > 0),
     [products]
   );
 
-  const outOfStockProducts = useMemo(() => 
+  const outOfStockProducts = useMemo(() =>
     products.filter(p => p.quantity === 0),
     [products]
   );
@@ -138,7 +138,7 @@ const ProductStockTable = () => {
         ...record,
         quantity: editingQuantity
       };
-      
+
       await updateProduct(record._id, updatedProduct);
       setEditingKey('');
       setEditingQuantity(0);
@@ -328,8 +328,8 @@ const ProductStockTable = () => {
               okText="Sim"
               cancelText="Não"
             >
-              <Button 
-                type="text" 
+              <Button
+                type="text"
                 danger
                 icon={<DeleteOutlined />}
               >
@@ -358,7 +358,7 @@ const ProductStockTable = () => {
           style={{ marginBottom: 16 }}
         />
       )}
-      
+
       {lowStockProducts.length > 0 && (
         <Alert
           message={`${lowStockProducts.length} produto(s) com estoque baixo`}

@@ -15,10 +15,10 @@ function Login() {
     e.preventDefault();
 
     // credenciais locais
-    if (username === 'admin' && password === 'Ismael1234@') {
+    if (username === 'admin' && password === '1234') {
       localStorage.setItem('user', JSON.stringify({ role: 'admin', username }));
       navigate('/admin/relatorios'); // redireciona para a rota do administrador
-    } else if (username === 'deisevariedades' && password === 'Ismael1234@') {
+    } else if (username === 'operador' && password === '1234') {
       localStorage.setItem('user', JSON.stringify({ role: 'operador', username }));
       navigate('/caixa'); // redireciona para a rota do operador
     } else {
@@ -37,6 +37,7 @@ function Login() {
         <div className="login-right">
           <div className="login-form">
             <h1>Login</h1>
+            <p> admin / 1234 para adm e operador / 1234 para user</p>
             <form onSubmit={handleSubmit}>
               <Input
                 prefix={<UserOutlined />}

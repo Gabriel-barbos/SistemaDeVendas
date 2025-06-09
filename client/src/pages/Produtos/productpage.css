@@ -31,3 +31,153 @@
     gap: 13px;
     margin-top: 25px;
   }
+
+  /* Adicione estes estilos ao seu arquivo productpage.css */
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  width: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.loading-spinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.spinner-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+.spinner-ring:nth-child(1) {
+  border-top-color: #1890ff;
+  animation-delay: 0s;
+}
+
+.spinner-ring:nth-child(2) {
+  border-right-color: #52c41a;
+  animation-delay: -0.5s;
+  width: 70px;
+  height: 70px;
+  top: 5px;
+  left: 5px;
+}
+
+.spinner-ring:nth-child(3) {
+  border-bottom-color: #fa8c16;
+  animation-delay: -1s;
+  width: 50px;
+  height: 50px;
+  top: 15px;
+  left: 15px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+  text-align: center;
+  background: linear-gradient(45deg, #1890ff, #52c41a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loading-text p {
+  margin: 8px 0 0 0;
+  font-size: 16px;
+  color: #8c8c8c;
+  text-align: center;
+  font-weight: 400;
+}
+
+/* Animação suave para quando o loading aparecer */
+.loading-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  .loading-container {
+    min-height: 300px;
+    margin: 10px 0;
+  }
+  
+  .loading-content {
+    padding: 30px 20px;
+    gap: 15px;
+  }
+  
+  .loading-spinner {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .spinner-ring:nth-child(2) {
+    width: 50px;
+    height: 50px;
+    top: 5px;
+    left: 5px;
+  }
+  
+  .spinner-ring:nth-child(3) {
+    width: 35px;
+    height: 35px;
+    top: 12.5px;
+    left: 12.5px;
+  }
+  
+  .loading-text h3 {
+    font-size: 20px;
+  }
+  
+  .loading-text p {
+    font-size: 14px;
+  }
+}
