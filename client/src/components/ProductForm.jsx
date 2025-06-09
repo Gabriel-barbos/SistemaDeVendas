@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Form,
   Input,
@@ -22,52 +22,12 @@ import {
 import useProducts from '../pages/Produtos/useProducts';
 
 const ProductForm = () => {
-  const { createProduct, loading, getCategories } = useProducts();
+  const { createProduct, loading } = useProducts();
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState('');
-
-  // Carrega as categorias existentes ao montar o componente
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        // Opção usando rota específica (recomendada)
-        const existingCategories = await getCategories();
-        setCategories(existingCategories || []);
-        
-  
-        
-      } catch (error) {
-        console.error('Erro ao carregar categorias:', error);
-        // Categorias padrão caso haja erro
-        setCategories([
-          'eletronicos',
-          'acessorios', 
-          'cosmeticos',
-          'utilidades',
-          'outros'
-        ]);
-      }
-    };
-
-    loadCategories();
-  }, [getCategories]);
 
   const normFile = (e) => {
     return e?.fileList ? e.fileList.slice(-1) : [];
-  };
-
-  const handleAddCategory = () => {
-    if (newCategory && !categories.includes(newCategory.toLowerCase())) {
-      const updatedCategories = [...categories, newCategory.toLowerCase()];
-      setCategories(updatedCategories);
-      form.setFieldsValue({ category: newCategory.toLowerCase() });
-      setNewCategory('');
-      message.success(`Categoria "${newCategory}" adicionada!`);
-    } else if (categories.includes(newCategory.toLowerCase())) {
-      message.warning('Esta categoria já existe!');
-    }
   };
 
   const handleSubmit = async (values) => {
@@ -193,42 +153,14 @@ const ProductForm = () => {
           <Form.Item
             label="Categoria"
             name="category"
-            rules={[{ required: true, message: 'Por favor, selecione ou crie uma categoria!' }]}
+            rules={[{ required: true, message: 'Por favor, selecione a categoria do produto!' }]}
           >
-            <Select 
-              placeholder="Selecione ou digite uma nova categoria"
-              showSearch
-              optionFilterProp="children"
-              dropdownRender={(menu) => (
-                <>
-                  {menu}
-                  <div style={{ padding: '8px', borderTop: '1px solid #f0f0f0' }}>
-                    <Input.Group compact>
-                      <Input
-                        style={{ width: 'calc(100% - 80px)' }}
-                        placeholder="Nova categoria"
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                        onPressEnter={handleAddCategory}
-                      />
-                      <Button 
-                        type="primary" 
-                        style={{ width: '80px' }}
-                        onClick={handleAddCategory}
-                        disabled={!newCategory.trim()}
-                      >
-                        Adicionar
-                      </Button>
-                    </Input.Group>
-                  </div>
-                </>
-              )}
-            >
-              {categories.map(category => (
-                <Select.Option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </Select.Option>
-              ))}
+            <Select placeholder="Selecione a categoria">
+              <Select.Option value="eletronicos">Eletrônicos</Select.Option>
+              <Select.Option value="acessorios">Acessórios</Select.Option>
+              <Select.Option value="cosmeticos">Cosméticos</Select.Option>
+              <Select.Option value="utilidades">Utilidades</Select.Option>
+              <Select.Option value="outros">Outros</Select.Option>
             </Select>
           </Form.Item>
         </Col>
