@@ -11,7 +11,7 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        trim: true
+        enum: ['eletronicos', 'acessorios', 'outros', 'cosmeticos', 'utilidades']
     }
 });
 
