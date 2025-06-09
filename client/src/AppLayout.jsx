@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from "../src/assets/logo.jpeg"
+import logo from "../src/assets/logo.png"
 import './main.css';
 import {
   PieChartOutlined,
