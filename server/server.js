@@ -7,6 +7,8 @@ require('dotenv').config();
 const productRoutes = require('./routes/ProductRoutes');
 const saleRoutes = require('./routes/SalesRoutes');
 const CaixaRoutes = require('./routes/CaixaRoutes.')
+const categoriesRoutes = require('./routes/Categories')
+
 
 const app = express();
 
@@ -18,7 +20,8 @@ app.use(cors());
 app.use('/products', productRoutes);
 app.use('/estoque', productRoutes);
 app.use('/sales', saleRoutes);
-app.use('/caixa', CaixaRoutes)
+app.use('/caixa', CaixaRoutes); 
+app.use('/categories', categoriesRoutes);
 
 // Conexão com MongoDB
 mongoose.connect(process.env.MONGO_URI, {
